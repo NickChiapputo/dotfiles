@@ -1,0 +1,6 @@
+{
+	"appid"   : "API_TOKEN",
+
+	"_comment": "city_id can be found by searching for the desired city at https://openweathermap.org/city and then taking the 7-digit code in the URL. The one below is for Grapevine, TX. Remove this comment, change the appid and city_id values, and rename the file to 'config.json' before using the script.",
+	"city_id" : "4694568"
+}
