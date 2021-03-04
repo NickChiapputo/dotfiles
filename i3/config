@@ -43,7 +43,7 @@ exec --no-startup-id picom --config $HOME/.config/picom/picom.conf
 exec --no-startup-id $HOME/.config/polybar/launch.sh > polybar.log
 
 
-# Enable touch tapping for touchpads.
+# Enable touch tapping and natural scrolling for touchpads.
 # Get device ID using command `xinput` and searching for entry containing 'Touchpad'.
 # Get property ID using command `xinput <device_id>` from previous step. Property contains something like 'Tapping Enabled'.
 # Command is of the format `xinput set-prop <device_id> <property_id> 1` where 1 enables the property
@@ -51,6 +51,7 @@ exec --no-startup-id $HOME/.config/polybar/launch.sh > polybar.log
 
 # Because the xinput ID and prop ID seem to keep changing, you can also use the name of the device and property to change.
 exec --no-startup-id xinput set-prop 'SYNA2B31:00 06CB:CD3E Touchpad' 'libinput Tapping Enabled' 1
+exec --no-startup-id xinput set-prop 'SYNA2B31:00 06CB:CD3E Touchpad' 'libinput Natural Scrolling Enabled' 1
 
 
 # Start conky on first load.
@@ -259,5 +260,7 @@ bar {
 # Window Gaps
 for_window [class="^.*"] border pixel 1
 gaps inner 10
-gaps outer 10
-gaps top 50		# Top Gap = outer + (polybar height [30]) + (extra padding [10])
+gaps outer 20
+gaps top 45		# Top Gap = inner + (polybar height [30]) + (polybar offset-y [10]) + (extra padding [5])
+gaps bottom 10
+#gaps vertical 50
