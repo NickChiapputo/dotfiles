@@ -185,6 +185,12 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
+# Move focused workspace to output
+bindsym $mod+Ctrl+Up    move workspace to output up
+bindsym $mod+Ctrl+Down  move workspace to output down
+bindsym $mod+Ctrl+Left  move workspace to output left
+bindsym $mod+Ctrl+Right move workspace to output right
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -242,13 +248,23 @@ bar {
 		status_command i3status
 		i3bar_command i3bar --transparency
 
+
+		# Set bar to auto-hide except while $mod key is pressed.
 		mode hide
 		modifier $mod
-		
+
+
+		# Set the tray icons to always appear on the system primary monitor.		
 		tray_output primary
 
+
+		# Don't show clickable workspace buttons.
 		workspace_buttons no
+
+
+		# Don't show the mode text information.
 		binding_mode_indicator no
+
 
 		# Polar Night Dark
 		colors {
