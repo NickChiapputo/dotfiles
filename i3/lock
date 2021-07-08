@@ -1,0 +1,153 @@
+#!/bin/bash
+
+### Nord theme colors.
+	POL_DARKEST='#2E3440'
+	POL_DARKEST_50='#2E344077'
+	POL_DARKEST_25='#2E344033'
+
+	POL_DARK='#3B4252'
+	POL_LIGHT='#434C5E'
+	POL_LIGHTEST='#4C566A'
+
+	SNOW_DARK='#D8DEE9'
+	SNOW_MEDIUM='#E5E9F0'
+	SNOW_LIGHT='#ECEFF4'
+
+	FROST_GREEN='#8FBCBB'
+	FROST_LIGHT_BLUE='#88C0DC'
+	FORST_MEDIUM_BLUE='#81A1C1'
+	FROST_DARK_BLUE='#5E81AC'
+
+	AURORA_RED='#BF616A'
+	AURORA_ORANGE='#D08770'
+	AURORA_YELLOW='#EBCB8B'
+	AURORA_GREEN='#A3BE8C'
+	AURORA_PURPLE='#B48EAD'
+
+	BLANK='#00000000'
+###
+
+# Define rectangle position. 
+# (0,0) is defined as bottom left corner of screen.
+# Rectangle is set semi-transparent behind date-time text.
+RECT_X_OFFSET="0"	# Offset from left-side of screen.
+RECT_Y_OFFSET="50"	# Offset from bottom of screen (will be substracted).
+RECT_WIDTH="720"	# Width of rectangle.
+RECT_HEIGHT="120"	# Height of rectangle.
+RECT_COLOR=$POL_LIGHTEST 	# Fill color of the rectangle.
+RECT_BORDER_COLOR=$FROST_GREEN
+
+rectangles=""
+
+SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+for RES in $SR; do
+	# Each value in $SR is of the format <width>x<height>+<horizontal_offset>+<vertical_offset>
+	# Separate the values into an array:
+	# 	SRA[0] = <width>
+	# 	SRA[1] = <height>
+	# 	SRA[2] = <horizontal_offset>
+	# 	SRA[3] = <vertical_offset>
+	SRA=(${RES//[x+]/ })
+	# echo "    ${SRA[0]} ${SRA[1]} ${SRA[2]} ${SRA[3]}"
+	
+	# Calculate the x and y positions using offsets.
+	CX=$((${SRA[2]} + $RECT_X_OFFSET))	# Add offset from left of screen.
+	CY=$((${SRA[1]} - $RECT_Y_OFFSET))	# Subtract offset from bottom of screen.
+	# echo "    $CX"
+	# echo "    $CY"
+	# echo ""
+
+	# Calculate right-x and top-y boundaries
+	RECT_X_RIGHT=$((CX+RECT_WIDTH))
+	RECT_Y_TOP=$((CY-RECT_HEIGHT))
+
+	rectangles+="rectangle $CX,$CY $RECT_X_RIGHT,$RECT_Y_TOP "
+done
+
+
+# TMPBG=/tmp/screen.png
+# scrot $TMPBG && convert $TMPBG -scale 5% -scale 2000% -draw "fill $RECT_COLOR fill-opacity 0.8 $rectangles" $TMPBG
+TMPBG=/home/nick/Pictures/lock_blur.png
+# convert $TMPBG -scale 5% -scale 2000% -draw "fill $RECT_COLOR fill-opacity 0.8 $rectangles" /home/nick/Pictures/lock_blur.png
+# convert $TMPBG -filter Gaussian -blur 0x8 -draw "fill $RECT_COLOR fill-opacity 0.8 $rectangles" /home/nick/Pictures/lock_blur.png
+# exit 0
+
+### i3lock-color Arguments:
+	#	-i <path>				# Set the lock screen image.
+	#	--insidever-color		# Inside color for verification.
+	#	--insidewrong-color		# Inside color for wrong passcode.
+	#	--inside-color			# Inside color for passcode entering.
+	#	--ringver-color			# Ring color for verification.
+	#	--ringwrong-color		# Ring color for wrong passcode.
+	#	--ring-color			# Ring color for passcode entering.
+	#	--line-color			# 
+	#
+	#	--keyhl-color			# Keypress highlight color.
+	#	--bshl-color			# Backspace highlight color.
+	#
+	#	--clock					# Show the clock.
+	#	--indicator				# Always show the unlock indicator (not just after a keypress).
+	#	--time-str				# Format the clock time display.
+	#	--time-align			# Time string alignment. 0: Center, 1: Left, 2: Right. Vertical alignment is always middle.
+	#	--date-str				# Format the clock date display.
+	#
+	#	--no-modkey-text		# After unsuccessful attempt, don't display modkeys (e.g., Caps Lock, NumLock, etc.).
+###
+# Indicator
+INDICATOR_RADIUS=30
+RING_WIDTH=10
+INDICATOR_OFFSET_X=30
+INDICATOR_OFFSET_Y=60
+
+# Clock (Date/Time)
+CLOCK_OFFSET_X=25
+# FONT='RobotoMono Nerd Font Mono:style=Regular'
+FONT='Hack'
+DATE_FMT="%A, %d %B"
+i3lock 						\
+  -i $TMPBG 				\
+  --insidever-color=$FORST_MEDIUM_BLUE      \
+  --insidewrong-color=$AURORA_RED	\
+  --inside-color=$POL_DARK 	\
+  --ringver-color=$FORST_MEDIUM_BLUE	\
+  --ringwrong-color=$AURORA_RED	\
+  --ring-color=$POL_DARKEST	\
+  --keyhl-color=$FROST_GREEN \
+  --bshl-color=$AURORA_PURPLE \
+  --clock 					\
+  --time-str="%H:%M:%S" 	\
+  --time-align 1 			\
+  --time-pos="x+$((RECT_X_OFFSET+CLOCK_OFFSET_X)):h-$((RECT_Y_OFFSET+RECT_HEIGHT-45))" 	\
+  --time-size 36			\
+  --time-color=$SNOW_DARK	\
+  --time-font $FONT	\
+  --date-str="$DATE_FMT" 	\
+  --date-pos="x+$((RECT_X_OFFSET+CLOCK_OFFSET_X)):h-$((RECT_Y_OFFSET+20))"	\
+  --date-align 1    \
+  --date-size 36										\
+  --date-color=$SNOW_DARK	\
+  --date-font $FONT	\
+  --indicator 				\
+  --radius=$INDICATOR_RADIUS 	\
+  --ring-width=$RING_WIDTH 	\
+  --line-uses-ring	\
+  --ind-pos="x+$((RECT_X_OFFSET+RECT_WIDTH-$INDICATOR_RADIUS-$RING_WIDTH-$INDICATOR_OFFSET_X)):h-$((RECT_Y_OFFSET+RECT_HEIGHT-$INDICATOR_OFFSET_Y))"	\
+  --greeter-text="" \
+  --greeteroutline-color="#ffffffff"	\
+  --greeter-color="#ffffffff"	\
+  --noinput-text=""	\
+  --verif-text=""	\
+  --wrong-text=""	\
+  --no-modkey-text	\
+
+  # --timepos="x-90:h-ch-20" \
+  # --datepos="tx+24:ty+25" \
+  # --clock --datestr "Type password to unlock..." \
+  # --insidecolor=00000000 --ringcolor=ffffffff --line-uses-inside \
+  # --keyhlcolor=d23c3dff --bshlcolor=d23c3dff --separatorcolor=00000000 \
+  # --insidevercolor=fecf4dff --insidewrongcolor=d23c3dff \
+  # --ringvercolor=ffffffff --ringwrongcolor=ffffffff --indpos="x+290:h-120" \
+  # --radius=20 --ring-width=3 --veriftext="" --wrongtext="" \
+  # --textcolor="ffffffff" --timecolor="ffffffff" --datecolor="ffffffff"
+
+# rm $TMPBG
