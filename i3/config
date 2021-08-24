@@ -19,6 +19,49 @@ font pango:monospace 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
+
+# Set colors from Xresources
+# Change 'color7' and 'color2' to whatever colors you want i3 to use
+# from the generated scheme.
+# NOTE: The '#f0f0f0' in the lines below is the color i3 will use if
+# it fails to get colors from Xresources.
+set_from_resource $fg i3wm.color7 #f0f0f0
+set_from_resource $bg i3wm.color0 #000000
+set_from_resource $ac i3wm.color8 #2f2f2f
+
+# Nord Theme Colors - nordtheme.com
+set $polar_night_darkest    #2e3440
+set $polar_night_dark       #3b4252
+set $polar_night_light      #434c5e
+set $polar_night_lightest   #4c566a
+
+set $snow_storm_dark        #d8dee9
+set $snow_storm_medium      #e5e9f0
+set $snow_storm_light       #eceff4
+
+set $frost_green            #8fbcbb
+set $frost_light_blue       #88c0dc
+set $frost_medium_blue      #81a1c1
+set $frost_dark_blue        #5e81ac
+
+set $aurora_red             #bf616a
+set $aurora_orange          #d08770
+set $aurora_yellow          #ebcb8b
+set $aurora_green           #a3be8c
+set $aurora_purple          #b48ead
+
+
+# Set theme colors.
+# class                 border                 backgr.   text  indicator              child_border
+client.focused          $polar_night_darkest   $bg       $fg   $aurora_red            $aurora_green
+client.focused_inactive $polar_night_darkest   $bg       $fg   $polar_night_darkest   $polar_night_darkest
+client.unfocused        $polar_night_darkest   $bg       $fg   $polar_night_darkest   $polar_night_darkest
+client.urgent           $polar_night_darkest   $bg       $fg   $polar_night_darkest   $polar_night_darkest
+client.placeholder      $polar_night_darkest   $bg       $fg   $polar_night_darkest   $polar_night_darkest
+
+client.background       $bg
+
+
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -73,8 +116,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 
 
 # Brightness
-bindsym XF86MonBrightnessUp exec xbacklight -inc 1		# Increase brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 1	# Decrease brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5		# Increase brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5	# Decrease brightness
 
 
 # Test
@@ -145,6 +188,9 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
+# Lock the system.
+bindsym $mod+p exec /home/nick/.config/i3/lock
+
 # focus the child container
 #bindsym $mod+d focus child
 
@@ -191,6 +237,18 @@ bindsym $mod+Ctrl+Down  move workspace to output down
 bindsym $mod+Ctrl+Left  move workspace to output left
 bindsym $mod+Ctrl+Right move workspace to output right
 
+# Move focused workspace to another workspace
+bindsym $mod+Ctrl+1 move workspace to workspace number $ws1
+bindsym $mod+Ctrl+2 move workspace to workspace number $ws2
+bindsym $mod+Ctrl+3 move workspace to workspace number $ws3
+bindsym $mod+Ctrl+4 move workspace to workspace number $ws4
+bindsym $mod+Ctrl+5 move workspace to workspace number $ws5
+bindsym $mod+Ctrl+6 move workspace to workspace number $ws6
+bindsym $mod+Ctrl+7 move workspace to workspace number $ws7
+bindsym $mod+Ctrl+8 move workspace to workspace number $ws8
+bindsym $mod+Ctrl+9 move workspace to workspace number $ws9
+bindsym $mod+Ctrl+0 move workspace to workspace number $ws10
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -227,13 +285,14 @@ bindsym $mod+r mode "resize"
 
 
 # Open common applications
-set $mode_launcher Launch: [f]irefox, [s]ublime, [k]onsole, [z]oom
+set $mode_launcher Launch: [d]iscord, [f]irefox, [s]ublime, [k]onsole, [z]oom
 mode "$mode_launcher" {
 	# Launch the respective application and return to default mode.
-	bindsym f exec firefox; mode "default"
-	bindsym s exec subl; mode "default"
-	bindsym k exec konsole; mode "default"
-	bindsym z exec zoom; mode "default"
+	bindsym d exec --no-startup-id discord; mode "default"
+	bindsym f exec --no-startup-id firefox; mode "default"
+	bindsym s exec --no-startup-id subl; 	mode "default"
+	bindsym k exec --no-startup-id konsole; mode "default"
+	bindsym z exec --no-startup-id zoom; 	mode "default"
 
 	bindsym Escape mode "default"
 	bindsym Return mode "default"
@@ -262,8 +321,12 @@ bar {
 		workspace_buttons no
 
 
-		# Don't show the mode text information.
-		binding_mode_indicator no
+		# Show the mode text information.
+		binding_mode_indicator yes
+
+
+		# Set font, weight, and size
+		font pango:DejaVu Sans Mono 9
 
 
 		# Polar Night Dark
@@ -274,7 +337,7 @@ bar {
 
 
 # Window Gaps
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 3
 gaps inner 10
 gaps outer 20
 gaps top 45		# Top Gap = inner + (polybar height [30]) + (polybar offset-y [10]) + (extra padding [5])
