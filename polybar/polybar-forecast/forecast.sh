@@ -10,7 +10,7 @@ round()
 };
 
 
-if ! ping openweathermap.org -c 1 > /dev/null
+if ! ping openweathermap.org -c 1 &> /dev/null
 then
 	echo "????"
 	exit 0;
